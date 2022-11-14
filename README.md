@@ -1,6 +1,9 @@
 # cademed-back
 Repositorio do backend do sistema CadêMed
 
+# cademed-back heroku
+https://backend-cademed.herokuapp.com/
+
 # EXECUTAR O BACK
 -> Basta criar um ambiente virtual dentro da pasta back end é importando colocar a venv dentro do gitignore;
 
