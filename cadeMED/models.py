@@ -42,7 +42,7 @@ class Specialist(models.Model):
     id_category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='categorySpecialist')
     
     def __str__(self):
-        return self.name_specialist
+        return self.name_specialist 
     
 class Patient(models.Model):
     id_patient = models.UUIDField(primary_key=True, default=uuid4, editable=False)
@@ -67,6 +67,7 @@ class Schedules(models.Model):
     date_time = models.DateTimeField(blank=False, null=False)
     creat_at = models.DateTimeField(auto_now_add=True)
     canceled = models.BooleanField(default=False)
+    confirmation = models.BooleanField(default=False)
     comments = models.TextField()
     id_patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='schedules', blank=True, null=True)
     id_specialist = models.ForeignKey(Specialist, on_delete=models.CASCADE, related_name='detailSpecialist', blank=False, null=False)
