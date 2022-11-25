@@ -91,18 +91,23 @@ class SpecialistSerializer(serializers.ModelSerializer):
         }
         
         
-        def create(self, validated_data):
-            clinic = Clinic.objects.create(
-                username = validated_data.get('name'),
-                email = validated_data.get('email'),    
-                password = validated_data.get('password'),
-            )
-            clinic.set_password(validated_data.get('password'))
-            clinic.save()
-            return clinic
 
-
-
+        # def to_representation(self, instance):
+        #     ret = super().to_representation(instance)
+        #     representation = dict()
+        #     category = Category.objects.get(id=ret['id_category'])
+            
+        #     representation['name_specialist'] = ret['name_specialist']
+        #     representation['email'] = ret['email']
+        #     representation['phone'] = ret['phone']
+        #     representation['id_category'] = ret['id_category']
+            
+        #     if category is not None:
+        #         representation['id_category'] = category.name
+        #     else:
+        #         representation['id_category'] = ''
+                
+        #     return representation
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -181,6 +186,7 @@ class SchedulesSerializer(serializers.ModelSerializer):
             'date_time',
             'creat_at',
             'canceled',
+            'confirmation',
             'comments',
             'id_patient',
             'id_specialist'
