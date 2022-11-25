@@ -93,7 +93,7 @@ class SpecialistSerializer(serializers.ModelSerializer):
         
 
         # def to_representation(self, instance):
-        #     ret = super().to_representation(instance)
+        #     ret = super().to_representation(instance)aaaa
         #     representation = dict()
         #     category = Category.objects.get(id=ret['id_category'])
             
