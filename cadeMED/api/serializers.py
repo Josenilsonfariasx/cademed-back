@@ -123,6 +123,7 @@ class SpecialistSerializer(serializers.ModelSerializer):
         
         
 
+<<<<<<< HEAD
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         representation = dict()
@@ -148,6 +149,12 @@ class SpecialistSerializer(serializers.ModelSerializer):
             representation['name_speciality'] = speciality.name
         else:
             representation['id_speciality'] = ''
+=======
+        # def to_representation(self, instance):
+        #     ret = super().to_representation(instance)aaaa
+        #     representation = dict()
+        #     category = Category.objects.get(id=ret['id_category'])
+>>>>>>> fa51a5c (aaaa)
             
         return representation
 class SpecialitySerializer(serializers.ModelSerializer):
