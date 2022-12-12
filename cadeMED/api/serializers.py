@@ -1,72 +1,80 @@
 from dataclasses import fields
 from django.contrib.auth.hashers import make_password
-from cadeMED.models import Clinic, Patient, Schedules, Historic, Category, Specialist
+from cadeMED.models import Clinic, Address, Time, User,  Entity, Specialist, Speciality, Consult, Patient, Schedules
 
 from rest_framework import serializers, validators
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = (  'id_address',
+                    'state',
+                    'city',
+                    'district',
+                    'zip_code',
+                    'house_number',
+                    'creat_at',
+                    'update_at',
+                )
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (  'id',
+                    'username',
+                    'email',
+                    'password'
+                )   
+
+
+class EntitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Entity
+        fields = (  'id_entity',
+                    'user',
+                    'addrres',
+                    'name',
+                    'phone',
+                    'creat_at',
+                    'update_at'
+            
+                )
+        
+class TimeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =  Time
+        fields = (  'id_time',
+                    'date',
+                    'time',
+                )
 
 class ClinicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Clinic
         fields = (  'id_clinic',
-                    'name',
-                    'email',
                     'cnpj',
-                    'state',
-                    'city',
-                    'phone',
-                    'district',
-                    'street',
-                    'password',
-                ) 
-        extra_kwargs = {
-            "cnpj":{
-                "validators":[
-                    validators.UniqueValidator(
-                        Clinic.objects.all(), "There is a clinic with this CNPJ"
-                    )
-                ]
-            },
-            "password": {
-                    "write_only": True,
-                    "allow_blank": False,
-                    "style":{
-                    'input_type':'password'
-                    }
-                        },
-            "email": {
-                "required": True,
-                "allow_blank": False,
-                "validators": [
-                    validators.UniqueValidator(
-                        Clinic.objects.all(), "There is a clinic with this EMAIL"
-                    )
-                ]
-            }
-        }
-        
-        def create(self, validated_data):
-            clinic = Clinic.objects.create(
-                name = validated_data.get('name'),
-                email = validated_data.get('email'),    
-                password = make_password(validated_data('password'))
-            )   
-            clinic.set_password(validated_data.get('password'))
-            clinic.save()
-            return clinic
+                    'entity',
+                    'creat_at',
+                    'update_at'
+                    ) 
+
 
 class SpecialistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Specialist
         fields = (
             
-            'id_specialist', 
-            'name_specialist',
-            'email',
-            'phone',
+            'id_specialist',
+            'crm',
+            'rqe',
+            'creat_at',
+            'update_at',
             'id_clinic', 
-            'id_category'
+            'id_speciality',
+            'entity'
             
         )      
+        
         
         extra_kwargs = {
             
@@ -92,29 +100,33 @@ class SpecialistSerializer(serializers.ModelSerializer):
         
         
 
-        # def to_representation(self, instance):
-        #     ret = super().to_representation(instance)
-        #     representation = dict()
-        #     category = Category.objects.get(id=ret['id_category'])
+        def to_representation(self, instance):
+            ret = super().to_representation(instance)
+            representation = dict()
+            speciality = Speciality.objects.get(pk=ret['id_speciality'])
+            clinic = Clinic.objects.get(pk=ret['id_clinic'])
             
-        #     representation['name_specialist'] = ret['name_specialist']
-        #     representation['email'] = ret['email']
-        #     representation['phone'] = ret['phone']
-        #     representation['id_category'] = ret['id_category']
+            representation['id_specialist'] = ret['id_specialist']
+            representation['crm'] = ret['crm']
+            representation['rqe'] = ret['rqe']
+            representation['creat_at'] = ret['creat_at']
+            representation['update_at'] = ret ['update_at']
             
-        #     if category is not None:
-        #         representation['id_category'] = category.name
-        #     else:
-        #         representation['id_category'] = ''
+            if speciality is not None:
+                representation['id_category'] = category.name
+            else:
+                representation['id_category'] = ''
                 
-        #     return representation
-class CategorySerializer(serializers.ModelSerializer):
+            return representation
+class SpecialitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Speciality
         fields = (
         
-            'id_category',
+            'id_speciality',
             'name',
+            'creat_at',
+            'update_at',
             'description'   
         
         )
@@ -124,17 +136,12 @@ class PatientSerializer(serializers.ModelSerializer):
         model = Patient
         fields = (
             'id_patient', 
-            'name', 
             'birth_date',
-            'date_register',
-            'phone',
-            'email', 
-            'city',
-            'district',
-            'street',
-            'Num_address',
-            'rg',
-            'password'
+            'entity',
+            'creat_at',
+            'update_at',
+            'cpf'
+            
         )
             
         extra_kwargs = {
@@ -185,6 +192,7 @@ class SchedulesSerializer(serializers.ModelSerializer):
             'id_schedules',
             'date_time',
             'creat_at',
+            'update_at',
             'canceled',
             'confirmation',
             'comments',
@@ -193,19 +201,37 @@ class SchedulesSerializer(serializers.ModelSerializer):
             
         )
         
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        representation = dict()
+        patient = Patient.objects.get(pk=ret['id_patient'])
+        
+        representation ['id_schedules'] = ret['id_schedules']
+        representation ['date_time'] = ret['date_time']
+        representation ['creat_at'] = ret['creat_at']
+        representation ['canceled'] = ret['canceled']
+        representation ['confirmation'] = ret['confirmation']
+        representation ['comments'] = ret['comments']
+
+        if patient is not None:
+            representation['id_patient'] = patient.id_patient
+            representation['name'] = patient.name
+            representation['city'] = patient.city
+            
+        return representation
 
         
-class HistoricSerializer(serializers.ModelSerializer):
+class ConsultSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Historic
+        model = Consult
         fields = (
             
-            'id_historic',
-            'date',
+            'id_consult',
+            'date_time',
+            'creat_at',
+            'update_at',
             'symptoms',
-            'description_pain',
-            'local_pain',
-            'conclusion',
+            'comments',
             'id_schedules'
             
         )
@@ -213,7 +239,7 @@ class HistoricSerializer(serializers.ModelSerializer):
 
 
 class SchedulesDetailsSerializer(serializers.ModelSerializer):
-    historic = HistoricSerializer(many=True, read_only=True)    
+    historic = ConsultSerializer(many=True, read_only=True)    
     class Meta:
         model = Schedules
         fields = [
@@ -258,11 +284,11 @@ class SpecialistDetaislSerializer(serializers.ModelSerializer):
         fields = [
             
             'id_specialist',
-            'name_specialist',
+            'name',
             'email',
             'phone',
             'id_clinic',
-            'id_category',
+            'id_speciality',
             'detailSpecialist'
             
             
