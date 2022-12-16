@@ -3,20 +3,21 @@ from django.contrib.auth.models import User
 from uuid import uuid4
 from django.db import models
 
-from uuid import uuid4
+from uuid import uuid4\
 
 class Address(models.Model):
     id_address = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     state = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     district = models.CharField(max_length=100)
+    street = models.CharField(max_length=200)
     zip_code = models.CharField(max_length=9)
     house_number = models.IntegerField()
     creat_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return self.state
+        return self.street
 
 class Entity(models.Model):
     id_entity = models.UUIDField(primary_key=True, default=uuid4, editable=False)
@@ -77,6 +78,8 @@ class Patient(models.Model):
     creat_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now_add=True)
     
+    def __str__(self):
+        return self.entity.name
 class Schedules(models.Model):
     id_schedules = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     date_time = models.DateTimeField(blank=False, null=False)
@@ -90,7 +93,7 @@ class Schedules(models.Model):
     
     
     def __str__(self):
-        name = self.id_patient.name
+        name = self.id_patient.entity.name
         return name
     class Meta:
         unique_together = ('date_time', 'id_patient')
