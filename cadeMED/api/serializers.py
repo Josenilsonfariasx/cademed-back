@@ -123,7 +123,6 @@ class SpecialistSerializer(serializers.ModelSerializer):
         
         
 
-<<<<<<< HEAD
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         representation = dict()
