@@ -20,4 +20,5 @@ route.register (r'Consult', viewsets.ConsultViewset,basename='Consult')
 
 urlpatterns = [
     path('', include(route.urls))
+    
 ]
