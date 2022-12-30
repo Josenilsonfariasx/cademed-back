@@ -16,7 +16,7 @@ class AddressSerializer(serializers.ModelSerializer):
                     'zip_code',
                     'house_number',
                     'creat_at',
-                    'update_at',
+                    'update_at'
                 )
 
 class UserSerializer(serializers.ModelSerializer):
@@ -127,6 +127,7 @@ class SpecialistSerializer(serializers.ModelSerializer):
         ret = super().to_representation(instance)
         representation = dict()
         speciality = Speciality.objects.get(pk=ret['id_speciality'])
+        user = Specialist.objects.get(pk=ret['id_specialist'])
         # clinic = Clinic.objects.get(pk = ret['id_clinic'])
         
         representation['id_specialist'] = ret['id_specialist']
@@ -134,7 +135,6 @@ class SpecialistSerializer(serializers.ModelSerializer):
         representation['rqe'] = ret['rqe']
         representation['creat_at'] = ret['creat_at']
         representation['update_at'] = ret ['update_at']
-        representation['entity'] = ret ['entity']
         representation['id_clinic'] = ret['id_clinic']
         
         # if clinic is not None:
@@ -148,8 +148,18 @@ class SpecialistSerializer(serializers.ModelSerializer):
             representation['name_speciality'] = speciality.name
         else:
             representation['id_speciality'] = ''
-            
-        return representation
+        
+        if user is not None:
+            representation['name_specialist'] = user.entity.name
+            # representation['address_specialist'] = user.entity.addrres
+            representation['phone_specialist'] = user.entity.phone
+            representation['email_specialist'] = user.entity.user.email
+        else:
+            representation['name_specialist']    = ''
+            representation['address_specialist'] = ''
+            representation['phone_specialist']   =  ''
+            representation['email_specialist']   = ''
+        return representation    
 class SpecialitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Speciality
@@ -261,6 +271,7 @@ class SchedulesSerializer(serializers.ModelSerializer):
         representation ['id_schedules'] = ret['id_schedules']
         representation ['date_time'] = ret['date_time']
         representation ['creat_at'] = ret['creat_at']
+        representation ['update'] = ret['update_at']
         representation ['canceled'] = ret['canceled']
         representation ['confirmation'] = ret['confirmation']
         representation ['comments'] = ret['comments']
@@ -307,51 +318,10 @@ class SchedulesDetailsSerializer(serializers.ModelSerializer):
             'id_schedules',
             'date_time',
             'creat_at',
+            'update_at',
             'canceled',
             'comments',
             'historic',
             'id_specialist',
             'id_patient'
         )
-        
-# class PatientDetailsSerializer(serializers.ModelSerializer):
-#     schedules = SchedulesDetailsSerializer(many=True, read_only=True)
-#     class Meta:
-#         model = Patient
-#         fields = [
-            
-#             'id_patient', 
-#             'birth_date',  
-#             'cpf',
-#             'schedules'
-        
-#         ]
-        
-# class SpecialistDetaislSerializer(serializers.ModelSerializer):
-#     detailSpecialist = SchedulesDetailsSerializer(many=True, read_only=True)
-    
-#     class Meta:
-#         model = Specialist
-#         fields = [
-            
-#             'id_specialist',
-#             'id_clinic',
-#             'id_speciality',
-#             'detailSpecialist'
-            
-            
-#         ]
-        
-        
-# class ClinicDetailSerializer(serializers.ModelSerializer):
-#     clinics_specialist = SpecialistDetaislSerializer(many=True, read_only=True)
-    
-#     class Meta:
-#         model = Clinic
-#         fields = [
-    
-#             'id_clinic',
-#             'cnpj',
-#             'clinics_specialist'
-            
-#         ]

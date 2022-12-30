@@ -54,18 +54,17 @@ class PatientViewset(viewsets.ModelViewSet):
     serializer_class = serializers.PatientSerializer
     queryset = models.Patient.objects.all()
     pagination_class = Pagination
-    
+
+class ConsultViewset(viewsets.ModelViewSet):
+    serializer_class = serializers.ConsultSerializer
+    queryset = models.Consult.objects.all()
+    pagination_class = Pagination    
 class SchedulesViewset(viewsets.ModelViewSet):
     serializer_class = serializers.SchedulesSerializer
     queryset = models.Schedules.objects.all().order_by('date_time')
     pagination_class = Pagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     
-    filterset_fields = ['date_time','id_schedules']
-    search_fields = ['date_time','id_schedules','id_patient']
-    ordering_fields = ['date_time','id_schedules']
-    
-class ConsultViewset(viewsets.ModelViewSet):
-    serializer_class = serializers.ConsultSerializer
-    queryset = models.Consult.objects.all()
-    pagination_class = Pagination
+    filterset_fields = ['date_time','id_schedules', 'canceled','confirmation','id_patient','id_specialist']
+    search_fields = ['date_time','id_schedules', 'canceled','confirmation','id_patient','id_specialist']
+    ordering_fields = ['date_time','id_schedules', 'canceled','confirmation','id_patient','id_specialist']
