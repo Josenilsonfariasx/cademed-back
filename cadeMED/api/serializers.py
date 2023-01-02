@@ -137,12 +137,6 @@ class SpecialistSerializer(serializers.ModelSerializer):
         representation['update_at'] = ret ['update_at']
         representation['id_clinic'] = ret['id_clinic']
         
-        # if clinic is not None:
-        #     representation['id_clinic'] = clinic.id_clinic
-        #     representation['name_clinic'] = clinic.entity.name
-        # else:
-        #     representation['id_clinic'] = ''
-        #     representation['name_clinic'] = ''
         if speciality is not None:
             representation['id_speciality'] = speciality.id_speciality
             representation['name_speciality'] = speciality.name
@@ -151,14 +145,8 @@ class SpecialistSerializer(serializers.ModelSerializer):
         
         if user is not None:
             representation['name_specialist'] = user.entity.name
-            # representation['address_specialist'] = user.entity.addrres
             representation['phone_specialist'] = user.entity.phone
             representation['email_specialist'] = user.entity.user.email
-        else:
-            representation['name_specialist']    = ''
-            representation['address_specialist'] = ''
-            representation['phone_specialist']   =  ''
-            representation['email_specialist']   = ''
         return representation    
 class SpecialitySerializer(serializers.ModelSerializer):
     class Meta:
