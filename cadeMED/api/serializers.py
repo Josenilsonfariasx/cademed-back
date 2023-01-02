@@ -250,35 +250,35 @@ class SchedulesSerializer(serializers.ModelSerializer):
             
         )
         
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        representation = dict()
-        patient = Patient.objects.get(pk=ret['id_patient'])
-        specialist = Specialist.objects.get(pk=ret['id_specialist'])
+    # def to_representation(self, instance):
+    #     ret = super().to_representation(instance)
+    #     representation = dict()
+    #     patient = Patient.objects.get(pk=ret['id_patient'])
+    #     specialist = Specialist.objects.get(pk=ret['id_specialist'])
         
-        representation ['id_schedules'] = ret['id_schedules']
-        representation ['date_time'] = ret['date_time']
-        representation ['creat_at'] = ret['creat_at']
-        representation ['update'] = ret['update_at']
-        representation ['canceled'] = ret['canceled']
-        representation ['confirmation'] = ret['confirmation']
-        representation ['comments'] = ret['comments']
-        representation ['id_specialist'] = ret ['id_specialist']
+    #     representation ['id_schedules'] = ret['id_schedules']
+    #     representation ['date_time'] = ret['date_time']
+    #     representation ['creat_at'] = ret['creat_at']
+    #     representation ['update'] = ret['update_at']
+    #     representation ['canceled'] = ret['canceled']
+    #     representation ['confirmation'] = ret['confirmation']
+    #     representation ['comments'] = ret['comments']
+    #     representation ['id_specialist'] = ret ['id_specialist']
 
-        if specialist is not None:
-            representation['id_specialist'] = specialist.entity.name
-            representation['clinic_specialist'] = specialist.id_clinic.name
-        else:
-            representation['clinic_specialist'] = ''
-        if patient is not None:
-            representation['id_patient'] = patient.id_patient
-            representation['name_patient'] = patient.entity.name
-            representation['city_patient'] = patient.entity.addrres.city
-        else:
-            representation['id_patient'] = ''
-            representation['name'] = ''
-            representation['city'] = ''
-        return representation
+    #     if specialist is not None:
+    #         representation['id_specialist'] = specialist.entity.name
+    #         representation['clinic_specialist'] = specialist.id_clinic.name
+    #     else:
+    #         representation['clinic_specialist'] = ''
+    #     if patient is not None:
+    #         representation['id_patient'] = patient.id_patient
+    #         representation['name_patient'] = patient.entity.name
+    #         representation['city_patient'] = patient.entity.addrres.city
+    #     else:
+    #         representation['id_patient'] = ''
+    #         representation['name'] = ''
+    #         representation['city'] = ''
+    #     return representation
 
         
 class ConsultSerializer(serializers.ModelSerializer):
@@ -294,22 +294,4 @@ class ConsultSerializer(serializers.ModelSerializer):
             'comments',
             'id_schedules'
             
-        )
-        
-
-
-class SchedulesDetailsSerializer(serializers.ModelSerializer):
-    historic = ConsultSerializer(many=True, read_only=True)    
-    class Meta:
-        model = Schedules
-        fields = (
-            'id_schedules',
-            'date_time',
-            'creat_at',
-            'update_at',
-            'canceled',
-            'comments',
-            'historic',
-            'id_specialist',
-            'id_patient'
         )
