@@ -89,7 +89,7 @@ class Schedules(models.Model):
     confirmation = models.BooleanField(default=False)
     comments = models.TextField()
     id_patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='schedules', blank=True, null=True)
-    id_specialist = models.ForeignKey(Specialist, on_delete=models.CASCADE, related_name='detailSpecialist', blank=False, null=False)
+    id_specialist = models.ForeignKey(Specialist, on_delete=models.CASCADE, related_name='specialist', blank=False, null=False)
     
     
     def __str__(self):
@@ -105,5 +105,8 @@ class Consult(models.Model):
     update_at = models.DateTimeField(auto_now_add=True)
     symptoms = models.CharField(max_length=200, blank=True, null=True)
     comments = models.TextField()
-    id_schedules = models.ForeignKey(Schedules, related_name='historic', on_delete=models.CASCADE, blank=False, null=True )
+    id_schedules = models.ForeignKey(Schedules, related_name='historic', on_delete=models.CASCADE, blank=False, null=False )
     
+    def __str__(self):
+        name = self.id_schedules.id_patient.entity.name
+        return name
